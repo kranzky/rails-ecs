@@ -23,6 +23,13 @@
       "humanMinutes": 20,
       "aiMinutes": 95,
       "costs": []
+    },
+    {
+      "date": "2026-07-17",
+      "summary": "Phase 2: RFC-0003 (ApplicationComponent, entity subclass resolution) and RFC-0008 (install and component generators) built by parallel sub-agents. 157 examples green. Half of v0.1 is now landed (RFCs 0001, 0002, 0003, 0008). The headline finding is that ADR-0008 was wrong on both counts and had to be amended: overriding discriminate_class_for_record is dead code because ActiveRecord gates the hook on the result set containing inheritance_column, which the entities table has no reason to have — so Option A required the very gate that only the rejected Option B opens; fixed via the private instantiate_instance_of seam, now logged as an open question about depending on private Rails API. Separately, the ADR worried about the wrong failure mode: every irregular inflection round-trips fine (people, data, equipment, series, analyses), but namespacing is total and unfixable by inflection, because model_name.plural underscores the whole constant path before the inflector is consulted and is not injective (Blog::Post and BlogPost both give 'blog_posts'). Switched the discriminator to model_name.collection, which inverts cleanly and is byte-identical for every non-namespaced class, so no data migration was needed. The generator agent also found two require bugs inherited from Rails' own generator files, masked by an unrelated require in registry.rb. Both ADR errors were internally coherent, would have survived review, and were only caught by execution.",
+      "humanMinutes": 15,
+      "aiMinutes": 120,
+      "costs": []
     }
   ]
 }
