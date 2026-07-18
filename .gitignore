@@ -31,6 +31,9 @@
 /demo/config/credentials/*.key
 /demo/node_modules/
 
+# Claude Code — machine-local permission grants, not shared config
+.claude/settings.local.json
+
 # Editors / OS
 .DS_Store
 *.swp
