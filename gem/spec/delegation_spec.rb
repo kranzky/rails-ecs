@@ -139,8 +139,10 @@ RSpec.describe "method delegation" do
       Solo.component Email
       generated = Solo.generated_component_methods.instance_methods(false).sort
 
-      # #email is the reader (RFC-0006); everything else is Email's delegation.
-      expect(generated).to eq %i[address address= email send_welcome_email verified verified= who_am_i]
+      # #email is the reader (RFC-0006); #email? is the presence predicate
+      # (RFC-0009); everything else is Email's delegation.
+      expect(generated)
+        .to eq %i[address address= email email? send_welcome_email verified verified= who_am_i]
     end
 
     it "delegates exactly Name's own methods and state accessors" do
@@ -148,8 +150,9 @@ RSpec.describe "method delegation" do
       Solo.component Name
       generated = Solo.generated_component_methods.instance_methods(false).sort
 
+      # #name is the reader; #name? is the presence predicate (RFC-0009).
       expect(generated)
-        .to eq %i[combine first first= full_name initials last last= name title title=]
+        .to eq %i[combine first first= full_name initials last last= name name? title title=]
     end
   end
 
@@ -291,6 +294,50 @@ RSpec.describe "method delegation" do
       Resolved.component Name
 
       expect { Resolved.component Group, except: [:title] }.not_to raise_error
+    end
+  end
+
+  # A component reader name is reserved. A method delegated from the component
+  # that would take the reader's name used to silently overwrite the reader and
+  # recurse forever (SystemStackError). Surfaced building the demo with a
+  # relationship component named for its own association (ADR-0006).
+  describe "a delegated method colliding with a component reader" do
+    it "raises at declaration instead of recursing" do
+      # Sponsor's reader is `sponsor`; its belongs_to :sponsor also defines
+      # `sponsor`. Delegating it would shadow the reader.
+      stub_const("Team", Class.new(ApplicationEntity))
+
+      expect { Team.component Sponsor }
+        .to raise_error(EcsRails::DelegationConflict, /reader/)
+    end
+
+    it "names the fix in the message" do
+      stub_const("Team", Class.new(ApplicationEntity))
+
+      expect { Team.component Sponsor }
+        .to raise_error(EcsRails::DelegationConflict, /except: \[:sponsor\]|belongs_to/)
+    end
+
+    it "resolves cleanly when the colliding method is excepted" do
+      # `except: [:sponsor]` drops the belongs_to reader/writer, so the component
+      # reader survives and `team.sponsor` returns the Sponsor component.
+      stub_const("Team", Class.new(ApplicationEntity))
+      Team.component Sponsor, except: [:sponsor]
+
+      team = Team.create!
+      expect(team.sponsor).to be_a Sponsor
+      expect(team.sponsor.sponsor_id).to be_nil
+    end
+
+    it "leaves the class unchanged when it raises" do
+      stub_const("Team", Class.new(ApplicationEntity))
+      begin
+        Team.component Sponsor
+      rescue EcsRails::DelegationConflict
+        # expected
+      end
+      expect(Team.new).not_to respond_to :sponsor
+      expect(EcsRails.registry.components_for(Team)).to be_empty
     end
   end
 
