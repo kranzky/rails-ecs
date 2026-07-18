@@ -43,6 +43,13 @@
       "humanMinutes": 20,
       "aiMinutes": 210,
       "costs": []
+    },
+    {
+      "date": "2026-07-18",
+      "summary": "Phase 5: RFC-0007 (validation error merging) landed \u2014 v0.1 is now API-complete, all eight RFCs implemented, 382 examples green. entity.valid? reflects its touched components' validity and errors merge so a form reads normally (user.errors[:'email.address'] => ['is invalid'], full_messages => ['Email address is invalid']). Scope was narrower than the RFC first stated, because RFC-0006 had already made save/save! correct and atomic; the job reduced to making valid? fail first rather than the cascade's component.save! raising, and decoupling the machine-readable error key from the human message (which ActiveModel couples). valid? validates only components already in the entity's memo, and provably has no side effects. The agent surfaced the registry-singleton landmine a third time \u2014 its first cut read the registry from human_attribute_name, a hot per-form-field method, which is fragile in production because the Railtie clears the registry on reload; fixed by keying on the durable generated reader method instead. I then sealed the root cause centrally: added Registry#snapshot/#restore and a global spec_helper hook that restores the models.rb baseline after every example, so no spec can leak a cleared registry regardless of order. Also untracked .claude/settings.local.json, which the harness kept rewriting. Next: build the bulletin-board demo for real against the finished gem \u2014 the actual v0.1 kill/keep question of whether modelling with components is pleasant.",
+      "humanMinutes": 15,
+      "aiMinutes": 130,
+      "costs": []
     }
   ]
 }
