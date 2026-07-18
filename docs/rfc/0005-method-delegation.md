@@ -1,7 +1,7 @@
 # RFC-0005: Method delegation
 
 **Status:** Ready
-**Depends on:** RFC-0004
+**Depends on:** RFC-0004, RFC-0006
 
 ## Goal
 
