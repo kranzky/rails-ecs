@@ -13,25 +13,23 @@ module EcsRails
   #   end
   #
   #   User.components            # => [Name, Email, Group]
-  #   User.create!.email         # => the Email row, or nil (see #component)
+  #   User.create!.email         # => the Email row, or a virtual one (RFC-0006)
   #
   # Each declaration does three things: it records itself in the registry
   # (RFC-0002), it sets up the has_one that reads the component row, and it
-  # ensures #generated_component_methods exists — the module RFC-0005's delegated
-  # methods and RFC-0006's lazy reader are generated into.
+  # generates the lazy reader (RFC-0006) into #generated_component_methods —
+  # the module RFC-0005's delegated methods also land in.
   module DSL
     # Declares that this entity is composed from `component_class`.
     #
     # Defines a reader named for the component's model_name.singular, so
     # `component Email` gives `#email`.
     #
-    # **The reader returns nil when the entity has no row for the component.**
-    # RFC-0004 says it materialises an instance lazily, but that is RFC-0006's
-    # job, and RFC-0006 is a sibling of RFC-0005 on top of this RFC rather than a
-    # dependency of it — so this cannot rely on it. Until RFC-0006 lands the
-    # reader is ActiveRecord's own has_one reader and the gem does not yet meet
-    # architecture.md §3 ("entity.email always returns an Email instance"). See
-    # the "the reader" section of spec/dsl_spec.rb.
+    # **The reader always returns an instance, never nil** (architecture.md §3).
+    # If the entity has no row for the component, a virtual one is built with
+    # every attribute at its default. That is RFC-0006's doing, layered on top of
+    # this RFC through #generated_component_methods rather than woven into it —
+    # see #define_component_reader.
     #
     # `only:` / `except:` restrict which of the component's methods are delegated
     # onto the entity (RFC-0005). They never affect the reader: `user.group`
@@ -71,7 +69,7 @@ module EcsRails
       define_component_association(component_class)
 
       # Must follow the has_one: see #generated_component_methods.
-      generated_component_methods
+      define_component_reader(component_class)
 
       declaration
     end
@@ -142,6 +140,26 @@ module EcsRails
       end
 
       chain
+    end
+
+    # The lazy reader (RFC-0006), generated into the seam this DSL already
+    # builds: generated_component_methods sits closer to the class than
+    # ActiveRecord's GeneratedAssociationMethods, so this wins, and `super`
+    # reaches the has_one reader underneath. Nothing else moves.
+    #
+    # `super()` with explicit parens is required, not style: a method defined by
+    # define_method cannot use bare `super`, because there is no static argument
+    # list for it to forward.
+    #
+    # The reader is generated per component rather than defined once on
+    # Lazy::Entity because there is nothing generic to define — each one closes
+    # over its own name and its own has_one to call through to.
+    def define_component_reader(component_class)
+      name = component_class.model_name.singular.to_sym
+
+      generated_component_methods.define_method(name) do
+        ecs_component(name) { super() }
+      end
     end
 
     def define_component_association(component_class)
