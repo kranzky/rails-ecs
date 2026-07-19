@@ -249,3 +249,39 @@ under eager loading; zero runtime change (class names unchanged, so the registry
 and discriminator don't notice). Now the gem default —
 [ADR-0010](adr/0010-entity-component-directory-layout.md). Confirms the gem is
 genuinely layout-agnostic: where a class lives is purely organisational.
+
+### 🟠 N+1 by default in list views — 2026-07-19
+
+The posts index (2 published posts) issued **14 queries**: each post separately
+loads Title, Body, Authorship, the author User, its Name, and Likes. This is
+architecture.md open question 1 (no preloading) made concrete, and it is very
+visible — a component-per-row list view fans out one query per component per
+row. For a real feed this is untenable without preloading
+(`includes_components`), which is backlog. The single strongest case for it
+after the query DSL.
+
+### 🟡 Building an entity from form params is manual — 2026-07-19
+
+A normal Rails controller does `Post.new(post_params)`. With components there is
+no mass-assignment across the split, so `create` assigns component by component:
+
+```ruby
+post.title.text = post_params[:title]
+post.body.text  = post_params[:body]
+post.author     = author
+post.publish_state.state = ...
+```
+
+Delegation helps where an attribute is delegated (`post.author =`), but any
+component reached via `except:` (Title/Body's `text`) is hand-assigned. Workable
+and explicit, but it's boilerplate Rails developers won't expect, and strong
+params (`permit(:title, :body)`) no longer line up 1:1 with the model. A
+`post.assign_components(title: {text: ...}, ...)` helper or nested-attributes
+support is a plausible future convenience. Logged, not urgent.
+
+### 🟢 The full request cycle works — 2026-07-19
+
+Index (cross-component query), show (delegated reads), new/create (params →
+components, validation error merging in the form), and like (component behaviour
+`likes.increment!` through a button) all work end to end against a running
+server. The gem holds up in a real Rails request cycle, not just in the console.
