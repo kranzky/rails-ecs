@@ -13,12 +13,13 @@ justifies it. "It's in the proposal" is not justification.
 **The demo forced the first two.** Both are now confirmed needs, not
 speculation — see [friction-log.md](friction-log.md).
 
-| Idea | Why it's deferred | What would trigger it |
+| Idea | Status / why deferred | Trigger |
 |---|---|---|
-| ~~**Cross-component queries**~~ | ✅ **Shipped** as `with_component`/`without_component` — [ADR-0011](adr/0011-component-query-dsl.md) / [RFC-0010](rfc/0010-component-query-dsl.md). | Done. |
-| **Preloading** — `User.includes_components(:name, :email)` | v0.1 is N+1 by design (architecture.md open q. 1). **CONFIRMED**: the 2-post index issued 14 queries. | ✅ Done — the index fans out one query per component per row. |
-| **Required components** — `component Email, required: true` | Directly in tension with [ADR-0003](adr/0003-virtual-components-skip-validation.md). | Repeatedly hand-writing the same entity-level presence validation. |
-| **Relationship DSL** — Flecs-style pairs, `relates_to :author, User` | [ADR-0006](adr/0006-relationships-are-plain-components.md) — no evidence yet what it should look like. | Author/Parent/Group in the demo all reinventing the same boilerplate. |
+| ~~**Cross-component queries**~~ | ✅ **Shipped** — `with_component`/`without_component`, [ADR-0011](adr/0011-component-query-dsl.md) / [RFC-0010](rfc/0010-component-query-dsl.md). | fired |
+| **Preloading** — `User.includes_components(:name, :email)` | **Not built.** v0.1 is N+1 by design (architecture.md open q. 1). The next confirmed need. | ✅ **fired** — the 2-post demo index issued 14 queries, one per component per row. |
+| **Non-equality query conditions** — `with_component(Likes) { where("count > ?", 5) }` | **Not built.** RFC-0010 ships hash equality only; ranges/comparisons need a block or relation arg. | Not yet — the demo only needed equality. |
+| **Required components** — `component Email, required: true` | **Not built.** In tension with [ADR-0003](adr/0003-virtual-components-skip-validation.md). | Repeatedly hand-writing the same entity-level presence validation. |
+| **Relationship DSL** — Flecs-style pairs, `relates_to :author, User` | **Not built.** [ADR-0006](adr/0006-relationships-are-plain-components.md) — building it from imagination not experience. | Authorship/MemberUser/MemberGroup in the demo all reinventing the same `belongs_to` boilerplate. |
 
 ### Hard requirements the demo handed the query DSL
 
