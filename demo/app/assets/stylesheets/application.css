@@ -280,3 +280,15 @@ kbd, code { font-family: var(--mono); font-size: .88em; background: var(--surfac
   100% { box-shadow: 0 0 0 0 transparent; }
 }
 @media (prefers-reduced-motion: reduce) { .reset-banner__pulse { animation: none; } }
+
+/* footer */
+.site-footer { border-top: 1px solid var(--border); margin-top: 2rem; }
+.site-footer__inner {
+  max-width: var(--maxw); margin: 0 auto; padding: 1.25rem 1.25rem 2rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  flex-wrap: wrap; color: var(--faint); font-size: .85rem;
+}
+.site-footer strong { color: var(--muted); }
+.site-footer__links { display: inline-flex; align-items: center; gap: .6rem; }
+.site-footer__links a { color: var(--muted); font-weight: 550; }
+.site-footer__links a:hover { color: var(--brand); }
