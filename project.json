@@ -12,7 +12,7 @@
     "PostgreSQL"
   ],
   "links": {
-    "github": "https://github.com/kranzky/rails-ecs",
+    "github": "https://github.com/kranzky/ecs_rails",
     "website": "https://ecs-rails.kranzky.com"
   },
   "mrrHistory": [],

@@ -6,7 +6,7 @@ Ruby on Rails.
 > The full API below is implemented and tested (534 examples on real
 > PostgreSQL). A companion bulletin-board app is built entirely on it and runs
 > live at **[ecs-rails.kranzky.com](https://ecs-rails.kranzky.com)**. See the
-> [v0.1 retrospective](https://github.com/kranzky/rails-ecs/blob/main/docs/retrospective-v0.1.md)
+> [v0.1 retrospective](https://github.com/kranzky/ecs_rails/blob/main/docs/retrospective-v0.1.md)
 > for the full story of how it was designed.
 
 ## The idea
@@ -71,19 +71,19 @@ rails g ecs_rails:component Email address:string verified:boolean
 ```
 
 Entities go in `app/entities`, components in `app/entities/components`
-([configurable](https://github.com/kranzky/rails-ecs/blob/main/docs/adr/0010-entity-component-directory-layout.md)); the
+([configurable](https://github.com/kranzky/ecs_rails/blob/main/docs/adr/0010-entity-component-directory-layout.md)); the
 install generator wires the autoloading.
 
 ## Documentation
 
-- **[Architecture](https://github.com/kranzky/rails-ecs/blob/main/docs/architecture.md)** — the invariants. Start here.
-- **[v0.1 retrospective](https://github.com/kranzky/rails-ecs/blob/main/docs/retrospective-v0.1.md)** — what was built, what
+- **[Architecture](https://github.com/kranzky/ecs_rails/blob/main/docs/architecture.md)** — the invariants. Start here.
+- **[v0.1 retrospective](https://github.com/kranzky/ecs_rails/blob/main/docs/retrospective-v0.1.md)** — what was built, what
   the demo found, what's next.
-- **[ADRs](https://github.com/kranzky/rails-ecs/tree/main/docs/adr)** — why the design is the way it is (14 decisions,
+- **[ADRs](https://github.com/kranzky/ecs_rails/tree/main/docs/adr)** — why the design is the way it is (14 decisions,
   several amended by their own demo).
-- **[RFCs](https://github.com/kranzky/rails-ecs/tree/main/docs/rfc)** — the 13 features, each one commit.
-- **[Backlog](https://github.com/kranzky/rails-ecs/blob/main/docs/backlog.md)** — what deliberately isn't built yet.
-- **[Friction log](https://github.com/kranzky/rails-ecs/blob/main/docs/friction-log.md)** — the demo's running verdict on
+- **[RFCs](https://github.com/kranzky/ecs_rails/tree/main/docs/rfc)** — the 13 features, each one commit.
+- **[Backlog](https://github.com/kranzky/ecs_rails/blob/main/docs/backlog.md)** — what deliberately isn't built yet.
+- **[Friction log](https://github.com/kranzky/ecs_rails/blob/main/docs/friction-log.md)** — the demo's running verdict on
   the API.
 
 ## Development
@@ -100,19 +100,19 @@ Set `DATABASE_URL` to point the suite at a different database.
 
 ## Names
 
-Three, deliberately different — see
-[ADR-0007](https://github.com/kranzky/rails-ecs/blob/main/docs/adr/0007-monorepo-and-licensing.md#three-different-names).
+One name everywhere, in the casing each context wants — see
+[ADR-0007](https://github.com/kranzky/ecs_rails/blob/main/docs/adr/0007-monorepo-and-licensing.md#three-different-names).
 
 | | |
 |---|---|
-| GitHub repo | [`rails-ecs`](https://github.com/kranzky/rails-ecs) |
+| GitHub repo | [`ecs_rails`](https://github.com/kranzky/ecs_rails) |
 | RubyGems gem | `ecs_rails` |
 | Ruby module | `EcsRails` |
 | `require` | `ecs_rails` |
 
-The gem, module, and require are all `ecs_rails` / `EcsRails`. A `rails-` prefix
-is reserved by convention for Rails Core Team gems, so the repo (not the gem)
-carries it.
+The repo, gem, and require are all `ecs_rails`; the module is its Ruby constant
+form `EcsRails`. A `rails-` prefix is reserved by convention for Rails Core Team
+gems, and the hyphen form `ecs-rails` is an unrelated gem already on RubyGems.
 
 ## Licence
 

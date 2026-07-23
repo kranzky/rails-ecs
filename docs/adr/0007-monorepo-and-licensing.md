@@ -13,11 +13,11 @@ public repository when it is ready to publish to RubyGems.
 carries `gem/LICENSE.txt` and sets `spec.license = "MIT"` in the gemspec, so it
 stays self-contained when extracted.
 
-**Names.** Three names, deliberately different:
+**Names.** One name across every context, in the casing each one wants:
 
 | | Name |
 |---|---|
-| GitHub repo | `rails-ecs` |
+| GitHub repo | `ecs_rails` |
 | RubyGems gem | `ecs_rails` |
 | Ruby module | `EcsRails` |
 | `require` path | `ecs_rails` |
@@ -31,6 +31,10 @@ stays self-contained when extracted.
 > taken by an unrelated gem, so the gem is **`ecs_rails`** (underscore) — which
 > matches the module and require path exactly and needs no shim. See the
 > [naming amendment](#naming-amendment).
+>
+> **Amended 2026-07-23.** The GitHub repo was originally `rails-ecs`; it was
+> renamed to **`ecs_rails`** so the repo, gem, and require path all match. Only
+> the module keeps Ruby's constant casing, `EcsRails`.
 
 ## Reason
 
@@ -63,7 +67,7 @@ ecosystem default and the lowest-friction choice for adoption.
 ### The demo is public and MIT, not private
 
 Originally: *"The demo carries no licence and stays private."* Superseded when
-the repository was created public at `github.com/kranzky/rails-ecs`, with a root
+the repository was created public at `github.com/kranzky/ecs_rails`, with a root
 MIT `LICENSE` covering everything.
 
 **Reason.** A public gem whose reference application is secret helps nobody. The
@@ -77,9 +81,12 @@ the whole repository, not just `gem/`. Nothing here should be treated as
 confidential. No secrets, credentials, or customer data — the demo seeds fake
 data only.
 
-### Three different names
+<a id="three-different-names"></a>
+### One name: `ecs_rails`
 
-The repo is `rails-ecs` but the gem is `ecs_rails`, which is not a typo.
+The gem, the GitHub repo, and the require path are all `ecs_rails`; the module
+is its Ruby constant form `EcsRails`. Two nearby names were rejected on the way
+here.
 
 The `rails-` **prefix** is out: every `rails-*` gem on RubyGems is published by
 Rails Core Team (`rails-html-sanitizer`, `rails-dom-testing`), so it reads as
@@ -87,8 +94,14 @@ Rails Core Team (`rails-html-sanitizer`, `rails-dom-testing`), so it reads as
 would also read `rails-ecs` as the namespace `Rails::Ecs`, squatting inside
 Rails' own module.
 
-So the RubyGems name is `ecs_rails`, the module `EcsRails`, the require path
-`ecs_rails` — all three aligned — and the GitHub repo stays `rails-ecs`.
+The hyphen form `ecs-rails` is out too — it was taken on RubyGems and needed a
+require shim (see the naming amendment below).
+
+> **Repo rename (2026-07-23).** The repo was first created as `rails-ecs`, on
+> the reasoning that a repo name is cosmetic and could keep the descriptive
+> `rails-ecs` ordering even where the gem could not. Keeping the repo out of
+> step with everything else proved to be needless friction, so it was renamed to
+> `ecs_rails` — the names now align everywhere but the module's casing.
 
 <a id="naming-amendment"></a>
 **Naming amendment (2026-07-22).** This originally chose the *hyphen* form

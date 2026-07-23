@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
     are lightweight identity records composed from reusable, lazily persisted
     components that encapsulate both data and behaviour.
   DESC
-  spec.homepage    = "https://github.com/kranzky/rails-ecs"
+  spec.homepage    = "https://github.com/kranzky/ecs_rails"
   spec.license     = "MIT"
 
   spec.required_ruby_version = ">= 3.2.0"
