@@ -18,13 +18,19 @@ stays self-contained when extracted.
 | | Name |
 |---|---|
 | GitHub repo | `rails-ecs` |
-| RubyGems gem | `ecs-rails` |
+| RubyGems gem | `ecs_rails` |
 | Ruby module | `EcsRails` |
-| `require` path | `ecs_rails` (with an `ecs-rails.rb` shim) |
+| `require` path | `ecs_rails` |
 
 > **Amended 2026-07-17.** As originally written this ADR said the demo "carries
 > no licence and stays private". That is superseded — see
 > [Amendment](#amendment). The naming section was added at the same time.
+>
+> **Amended 2026-07-22.** The RubyGems name was `ecs-rails` (hyphen), which
+> needed a `lib/ecs-rails.rb` shim. At publish time `ecs-rails` turned out to be
+> taken by an unrelated gem, so the gem is **`ecs_rails`** (underscore) — which
+> matches the module and require path exactly and needs no shim. See the
+> [naming amendment](#naming-amendment).
 
 ## Reason
 
@@ -73,21 +79,28 @@ data only.
 
 ### Three different names
 
-The repo is `rails-ecs` but the gem is `ecs-rails`, which is not a typo.
+The repo is `rails-ecs` but the gem is `ecs_rails`, which is not a typo.
 
-Every `rails-*` gem on RubyGems is published by Rails Core Team
-(`rails-html-sanitizer`, `rails-dom-testing`, `rails-controller-testing`), so a
-`rails-` **prefix** reads as *official Rails org* and raises a Rails trademark
-question at publish time. The ecosystem convention for third-party gems is the
-**suffix** — `rspec-rails`, `turbo-rails` — meaning "for Rails", not "by Rails".
-Bundler's dash convention would also read `rails-ecs` as the namespace
-`Rails::Ecs`, i.e. squatting inside Rails' own module.
+The `rails-` **prefix** is out: every `rails-*` gem on RubyGems is published by
+Rails Core Team (`rails-html-sanitizer`, `rails-dom-testing`), so it reads as
+*official Rails org* and raises a trademark question. Bundler's dash convention
+would also read `rails-ecs` as the namespace `Rails::Ecs`, squatting inside
+Rails' own module.
 
-So: `ecs-rails` on RubyGems, module `EcsRails` (not `Ecs::Rails`, for the same
-squatting reason). The GitHub repo name is cosmetic and stays `rails-ecs`.
+So the RubyGems name is `ecs_rails`, the module `EcsRails`, the require path
+`ecs_rails` — all three aligned — and the GitHub repo stays `rails-ecs`.
 
-**Consequence.** Bundler requires a gem by its own name, so a host app's
-`Bundler.require` attempts `require "ecs-rails"` — with the hyphen — which Ruby
-maps to `lib/ecs-rails.rb`, not `lib/ecs_rails.rb`. The gem therefore ships a
-one-line `lib/ecs-rails.rb` shim requiring the canonical `ecs_rails`. Without
-it, a host Rails app raises `LoadError` on boot. Verified against the demo.
+<a id="naming-amendment"></a>
+**Naming amendment (2026-07-22).** This originally chose the *hyphen* form
+`ecs-rails`, to follow the third-party suffix convention (`rspec-rails`,
+`turbo-rails`, meaning "for Rails"). That form has a cost — Bundler requires a
+gem by its own name, so `Bundler.require` would attempt `require "ecs-rails"`,
+which Ruby maps to `lib/ecs-rails.rb`; the gem shipped a one-line shim there
+requiring the canonical `ecs_rails`, or a host app raised `LoadError` on boot.
+
+At publish time `ecs-rails` turned out to be **taken** on RubyGems by an
+unrelated gem. The fix was also the cleaner name: `ecs_rails` (underscore)
+matches the `EcsRails` module and the `ecs_rails` require path exactly, so
+`Bundler.require` loads `lib/ecs_rails.rb` directly and the shim is deleted. The
+loss of the "for Rails" suffix reading is a fair trade for one name that is
+correct everywhere.

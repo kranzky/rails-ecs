@@ -56,7 +56,7 @@ Email.pending.find_each(&:send_welcome_email)
 | | |
 |---|---|
 | **[`docs/`](docs/)** | The specification. Architecture, ADRs, RFCs, backlog. |
-| **[`gem/`](gem/)** | The `ecs-rails` gem. |
+| **[`gem/`](gem/)** | The `ecs_rails` gem. |
 | **[`demo/`](demo/)** | A bulletin board built with it, via `path: "../gem"`. |
 
 The demo is built **alongside** the gem, not after it. If a feature feels
@@ -70,10 +70,11 @@ Three, deliberately different — see
 
 | GitHub repo | RubyGems gem | Ruby module | `require` |
 |---|---|---|---|
-| `rails-ecs` | `ecs-rails` | `EcsRails` | `ecs_rails` |
+| `rails-ecs` | `ecs_rails` | `EcsRails` | `ecs_rails` |
 
-The suffix (`ecs-rails`, like `rspec-rails`) means *for* Rails. A `rails-`
-prefix is reserved by convention for Rails Core Team gems.
+The gem, module, and require all align as `ecs_rails` / `EcsRails`. A `rails-`
+prefix is reserved by convention for Rails Core Team gems, so only the repo
+carries it. (`ecs-rails` — the hyphen form — is an unrelated gem on RubyGems.)
 
 ## Start here
 
